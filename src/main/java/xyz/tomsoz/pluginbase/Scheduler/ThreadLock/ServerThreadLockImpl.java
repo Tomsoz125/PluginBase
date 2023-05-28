@@ -1,6 +1,5 @@
 package xyz.tomsoz.pluginbase.Scheduler.ThreadLock;
 
-import jdk.tools.jlink.plugin.Plugin;
 import org.bukkit.Bukkit;
 import xyz.tomsoz.pluginbase.PluginManager;
 import xyz.tomsoz.pluginbase.Promise.ThreadContext;
