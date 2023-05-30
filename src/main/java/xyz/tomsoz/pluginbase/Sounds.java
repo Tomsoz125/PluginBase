@@ -75,7 +75,7 @@ public final class Sounds {
      * Play a sound to a location.
      *
      * @param loc       The location the sound will be played
-     * @param soundName The name of the sound, either the enum name for vanilla sounds, or a custom
+     * @param soundName The nameSoun of the sound, either the enum name for vanilla sounds, or a custom
      *                  sound name prefixed with {@link #CUSTOM_PREFIX}
      * @param volume    The volume of the sound
      * @param pitch     The pitch of the sound

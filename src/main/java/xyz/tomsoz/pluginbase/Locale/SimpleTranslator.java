@@ -1,6 +1,7 @@
 package xyz.tomsoz.pluginbase.Locale;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.tomsoz.pluginbase.Exceptions.APIException;
 import xyz.tomsoz.pluginbase.PluginManager;
 
@@ -8,6 +9,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.text.MessageFormat;
 import java.util.*;
 
 final class SimpleTranslator implements Translator {
@@ -45,6 +47,11 @@ final class SimpleTranslator implements Translator {
     @Override
     public @NotNull String get(@NotNull String key) {
         return get(key, locale);
+    }
+
+    @Override
+    public @NotNull String get(@NotNull String key, @Nullable Object... objects) {
+        return MessageFormat.format(get(key, locale), objects);
     }
 
     @Override

@@ -28,6 +28,8 @@ public interface Translator {
      */
     @NotNull String get(@NotNull String key);
 
+    @NotNull String get(@NotNull String key, Object... objects);
+
     /**
      * Returns the message that corresponds to the given key, using the given locale. If no such
      * message is found, the key will be returned.
