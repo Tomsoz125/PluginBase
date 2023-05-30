@@ -92,9 +92,9 @@ public abstract class BaseCommand implements CommandExecutor {
             return true;
         }
 
-        load(commandSender, command, s, strings);
+        run(commandSender, command, s, strings);
         return true;
     }
 
-    protected void load(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {}
+    protected void run(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {}
 }
