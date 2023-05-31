@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class Text {
     private static final String IGNORE_MESSAGE_VALUE = "ignore";
     private static final String MINI_PREFIX = "mini:";
-    public static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]){6}");
+    public static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f0-9]){6}>");
     public static final String CHAT_LINE = "&m-----------------------------------------------------";
     public static final String CONSOLE_LINE = "*-----------------------------------------------------*";
     public static final MiniMessage MINI_MESSAGE = MiniMessage.builder().build();
