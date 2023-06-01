@@ -55,7 +55,7 @@ public abstract class BaseCommand implements CommandExecutor {
             return true;
         }
 
-        if (!commandSender.hasPermission(this.permission)) {
+        if (!(this.permission == null) && !commandSender.hasPermission(this.permission)) {
             Text.tell(commandSender, messages.get("commands.no-permission"));
             return true;
         }
