@@ -181,7 +181,7 @@ public class Text {
             Matcher matcher = HEX_PATTERN.matcher(message);
 
             while (matcher.find()) {
-                final net.md_5.bungee.api.ChatColor hexColour = net.md_5.bungee.api.ChatColor.of(matcher.group().substring(2, matcher.group().length() - 1));
+                final net.md_5.bungee.api.ChatColor hexColour = net.md_5.bungee.api.ChatColor.of(matcher.group().substring(1, matcher.group().length() - 1));
                 final String before = message.substring(0, matcher.start());
                 final String after = message.substring(matcher.end());
 
