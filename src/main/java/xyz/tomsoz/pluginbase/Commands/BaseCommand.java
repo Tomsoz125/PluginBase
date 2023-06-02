@@ -60,7 +60,7 @@ public abstract class BaseCommand implements CommandExecutor {
             return true;
         }
 
-        if (args == null) {
+        if (this.args != null) {
             int required = 0;
 
             StringBuilder usageStr = new StringBuilder();
