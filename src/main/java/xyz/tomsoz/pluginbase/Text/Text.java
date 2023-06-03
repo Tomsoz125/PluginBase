@@ -1,6 +1,7 @@
 package xyz.tomsoz.pluginbase.Text;
 
 import com.cryptomorin.xseries.messages.Titles;
+import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer;
@@ -17,7 +18,10 @@ import xyz.tomsoz.pluginbase.Common;
 import xyz.tomsoz.pluginbase.Locale.Locales;
 import xyz.tomsoz.pluginbase.PluginManager;
 
+import javax.annotation.Nonnull;
+import java.awt.*;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -29,9 +33,36 @@ public class Text {
     private static final String IGNORE_MESSAGE_VALUE = "ignore";
     private static final String MINI_PREFIX = "mini:";
     public static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]){6}");
+    public static final Pattern GRADIENT_PATTERN = Pattern.compile("<GRADIENT:([0-9A-Fa-f]{6})>(.*?)</GRADIENT:([0-9A-Fa-f]{6})>");
+    public static final Pattern RAINBOW_PATTERN = Pattern.compile("<RAINBOW>(.*?)</RAINBOW>");
     public static final String CHAT_LINE = "&m-----------------------------------------------------";
     public static final String CONSOLE_LINE = "*-----------------------------------------------------*";
     public static final MiniMessage MINI_MESSAGE = MiniMessage.builder().build();
+
+    private static final List<String> SPECIAL_COLORS = Arrays.asList("&l", "&n", "&o", "&k", "&m", "§l", "§n", "§o", "§k", "§m");
+
+    /**
+     * Cached result of all legacy colors.
+     *
+     * @since 1.0.0
+     */
+    private static final Map<Color, net.md_5.bungee.api.ChatColor> COLORS = ImmutableMap.<Color, net.md_5.bungee.api.ChatColor>builder()
+            .put(new Color(0), net.md_5.bungee.api.ChatColor.getByChar('0'))
+            .put(new Color(170), net.md_5.bungee.api.ChatColor.getByChar('1'))
+            .put(new Color(43520), net.md_5.bungee.api.ChatColor.getByChar('2'))
+            .put(new Color(43690), net.md_5.bungee.api.ChatColor.getByChar('3'))
+            .put(new Color(11141120), net.md_5.bungee.api.ChatColor.getByChar('4'))
+            .put(new Color(11141290), net.md_5.bungee.api.ChatColor.getByChar('5'))
+            .put(new Color(16755200), net.md_5.bungee.api.ChatColor.getByChar('6'))
+            .put(new Color(11184810), net.md_5.bungee.api.ChatColor.getByChar('7'))
+            .put(new Color(5592405), net.md_5.bungee.api.ChatColor.getByChar('8'))
+            .put(new Color(5592575), net.md_5.bungee.api.ChatColor.getByChar('9'))
+            .put(new Color(5635925), net.md_5.bungee.api.ChatColor.getByChar('a'))
+            .put(new Color(5636095), net.md_5.bungee.api.ChatColor.getByChar('b'))
+            .put(new Color(16733525), net.md_5.bungee.api.ChatColor.getByChar('c'))
+            .put(new Color(16733695), net.md_5.bungee.api.ChatColor.getByChar('d'))
+            .put(new Color(16777045), net.md_5.bungee.api.ChatColor.getByChar('e'))
+            .put(new Color(16777215), net.md_5.bungee.api.ChatColor.getByChar('f')).build();
 
 
     // ---------------------------------------------------------------------------------
@@ -157,8 +188,179 @@ public class Text {
     }
 
     /**
+     * Returns a gradient array of chat colors.
+     *
+     * @param start The starting color.
+     * @param end   The ending color.
+     * @param step  How many colors we return.
+     * @author TheViperShow
+     * @since 1.0.0
+     */
+    @Nonnull
+    private static net.md_5.bungee.api.ChatColor[] createGradient(@Nonnull Color start, @Nonnull Color end, int step) {
+        net.md_5.bungee.api.ChatColor[] colors = new net.md_5.bungee.api.ChatColor[step];
+        int stepR = Math.abs(start.getRed() - end.getRed()) / (step - 1);
+        int stepG = Math.abs(start.getGreen() - end.getGreen()) / (step - 1);
+        int stepB = Math.abs(start.getBlue() - end.getBlue()) / (step - 1);
+        int[] direction = new int[] {
+                start.getRed() < end.getRed() ? +1 : -1,
+                start.getGreen() < end.getGreen() ? +1 : -1,
+                start.getBlue() < end.getBlue() ? +1 : -1
+        };
+
+        for (int i = 0; i < step; i++) {
+            Color color = new Color(start.getRed() + ((stepR * i) * direction[0]), start.getGreen() + ((stepG * i) * direction[1]), start.getBlue() + ((stepB * i) * direction[2]));
+            if (Common.SPIGOT && Common.isServerVersionAtLeast(16)) {
+                colors[i] = net.md_5.bungee.api.ChatColor.of(color);
+            } else {
+                colors[i] = getClosestColor(color);
+            }
+        }
+
+        return colors;
+    }
+
+    /**
+     * Returns the closest legacy color from an rgb color
+     *
+     * @param color The color we want to transform
+     * @since 1.0.0
+     */
+    @Nonnull
+    private static net.md_5.bungee.api.ChatColor getClosestColor(Color color) {
+        Color nearestColor = null;
+        double nearestDistance = Integer.MAX_VALUE;
+
+        for (Color constantColor : COLORS.keySet()) {
+            double distance = Math.pow(color.getRed() - constantColor.getRed(), 2) + Math.pow(color.getGreen() - constantColor.getGreen(), 2) + Math.pow(color.getBlue() - constantColor.getBlue(), 2);
+            if (nearestDistance > distance) {
+                nearestColor = constantColor;
+                nearestDistance = distance;
+            }
+        }
+        return COLORS.get(nearestColor);
+    }
+
+    @Nonnull
+    private static String withoutSpecialChar(@Nonnull String source) {
+        String workingString = source;
+        for (String color : SPECIAL_COLORS) {
+            if (workingString.contains(color)) {
+                workingString = workingString.replace(color, "");
+            }
+        }
+        return workingString;
+    }
+
+    /**
+     * Colors a String with a gradiant.
+     *
+     * @param string The string we want to color
+     * @param start  The starting gradiant
+     * @param end    The ending gradiant
+     * @since 1.0.0
+     */
+    @Nonnull
+    private static String color(@Nonnull String string, @Nonnull Color start, @Nonnull Color end) {
+        String originalString = string;
+
+        net.md_5.bungee.api.ChatColor[] colors = createGradient(start, end, withoutSpecialChar(string).length());
+        return apply(originalString, colors);
+    }
+
+    @Nonnull
+    private static String apply(@Nonnull String source, net.md_5.bungee.api.ChatColor[] colors) {
+        StringBuilder specialColors = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] characters = source.split("");
+        int outIndex = 0;
+        for (int i = 0; i < characters.length; i++) {
+            if (characters[i].equals("&") || characters[i].equals("§")) {
+                if (i + 1 < characters.length) {
+                    if (characters[i + 1].equals("r")) {
+                        specialColors.setLength(0);
+                    } else {
+                        specialColors.append(characters[i]);
+                        specialColors.append(characters[i + 1]);
+                    }
+                    i++;
+                } else
+                    stringBuilder.append(colors[outIndex++]).append(specialColors).append(characters[i]);
+            } else
+                stringBuilder.append(colors[outIndex++]).append(specialColors).append(characters[i]);
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Converts plain text string into a gradient string.
+     * e.g. <GRADIENT:2C08BA>Cool string with a gradient</GRADIENT:028A97>
+     *
+     * @param str The string to translate gradient on
+     * @return String with gradient applied or an empty string if str is null.
+     */
+    @NotNull
+    public static String gradient(@Nullable String str) {
+        if (str == null) return "";
+        Matcher matcher = GRADIENT_PATTERN.matcher(str);
+        while (matcher.find()) {
+            String start = matcher.group(1);
+            String end = matcher.group(3);
+            String content = matcher.group(2);
+            str = str.replace(matcher.group(), color(content, new Color(Integer.parseInt(start, 16)), new Color(Integer.parseInt(end, 16))));
+        }
+        return str;
+    }
+
+    /**
+     * Colors a String with rainbow colors.
+     *
+     * @param str     The string which should have rainbow colors
+     * @param saturation The saturation of the rainbow colors
+     * @since 1.0.3
+     */
+    @Nonnull
+    public static String rainbow(@Nullable String str, float saturation) {
+        String originalString = str;
+        if (str == null) return "";
+
+        Matcher matcher = RAINBOW_PATTERN.matcher(str);
+        while (matcher.find()) {
+            String content = matcher.group(2);
+            net.md_5.bungee.api.ChatColor[] colors = createRainbow(withoutSpecialChar(content).length(), saturation);
+            originalString = originalString.replace(matcher.group(), apply(content, colors));
+        }
+        return str;
+    }
+
+    /**
+     * Returns a rainbow array of chat colors.
+     *
+     * @param step       How many colors we return
+     * @param saturation The saturation of the rainbow
+     * @return The array of colors
+     * @since 1.0.3
+     */
+    @Nonnull
+    private static net.md_5.bungee.api.ChatColor[] createRainbow(int step, float saturation) {
+        net.md_5.bungee.api.ChatColor[] colors = new net.md_5.bungee.api.ChatColor[step];
+        double colorStep = (1.00 / step);
+
+        for (int i = 0; i < step; i++) {
+            Color color = Color.getHSBColor((float) (colorStep * i), saturation, saturation);
+            if (Common.SPIGOT && Common.isServerVersionAtLeast(16)) {
+                colors[i] = net.md_5.bungee.api.ChatColor.of(color);
+            } else {
+                colors[i] = getClosestColor(color);
+            }
+        }
+
+        return colors;
+    }
+
+    /**
      * Converts plain string with color codes into a colorized message. Supports HEX colors in the
-     * format of {@code <#HEX>}. 1.16+ HEX support requires the server software to be Spigot, or a
+     * format of {@code &#HEX}. 1.16+ HEX support requires the server software to be Spigot, or a
      * fork of Spigot.
      *
      * @param str The plain string
@@ -176,6 +378,8 @@ public class Text {
                     .replace("&s", scheme.getSecondary())
                     .replace("&t", scheme.getTertiary());
         }
+
+        message = gradient(str);
 
         if (Common.SPIGOT && Common.isServerVersionAtLeast(16)) {
             Matcher matcher = HEX_PATTERN.matcher(message);
