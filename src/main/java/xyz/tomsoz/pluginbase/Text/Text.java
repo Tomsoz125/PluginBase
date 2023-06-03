@@ -379,7 +379,7 @@ public class Text {
                     .replace("&t", scheme.getTertiary());
         }
 
-        message = gradient(str);
+        message = gradient(message);
 
         if (Common.SPIGOT && Common.isServerVersionAtLeast(16)) {
             Matcher matcher = HEX_PATTERN.matcher(message);
