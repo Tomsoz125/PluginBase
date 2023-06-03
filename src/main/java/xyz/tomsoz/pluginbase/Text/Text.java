@@ -326,12 +326,11 @@ public class Text {
 
         Matcher matcher = RAINBOW_PATTERN.matcher(str);
         while (matcher.find()) {
-            String content = matcher.group();
-            Bukkit.broadcastMessage(content);
+            String content = matcher.group(1);
             net.md_5.bungee.api.ChatColor[] colors = createRainbow(withoutSpecialChar(content).length(), saturation);
             originalString = originalString.replace(matcher.group(), apply(content, colors));
         }
-        return str;
+        return originalString;
     }
 
     /**
