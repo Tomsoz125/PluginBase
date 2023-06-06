@@ -15,13 +15,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.tomsoz.pluginbase.Exceptions.PluginDisabledException;
 import xyz.tomsoz.pluginbase.Exceptions.PluginErrorException;
 import xyz.tomsoz.pluginbase.Text.Text;
 
 import java.util.*;
 import java.util.function.IntConsumer;
 import java.util.function.UnaryOperator;
+import java.util.logging.Level;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Common {
@@ -348,14 +348,16 @@ public final class Common {
     public static boolean isPluginEnabled(String name) {
         if (Bukkit.getPluginManager().isPluginEnabled(name)) return true;
         else {
-            throw new PluginDisabledException(name, false);
+            return false;
         }
     }
 
     public static boolean isPluginEnabled(String name, boolean disable) {
         if (Bukkit.getPluginManager().isPluginEnabled(name)) return true;
         else {
-            throw new PluginDisabledException(name, disable);
+            Text.log(Level.SEVERE, "The required plugin " + name + " was not found!");
+            if (disable) Bukkit.getPluginManager().disablePlugin(PluginManager.getPlugin());
+            return false;
         }
     }
 }
