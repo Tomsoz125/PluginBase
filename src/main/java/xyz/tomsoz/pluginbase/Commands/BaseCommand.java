@@ -27,7 +27,6 @@ public abstract class BaseCommand extends Command {
     protected String name;
     @Getter
     protected String description;
-    @Getter
     protected String[] aliases;
     @Getter
     protected Argument[] args;
