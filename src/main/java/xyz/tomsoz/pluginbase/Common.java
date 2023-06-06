@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.tomsoz.pluginbase.Exceptions.PluginDisabledException;
 import xyz.tomsoz.pluginbase.Exceptions.PluginErrorException;
 import xyz.tomsoz.pluginbase.Text.Text;
 
@@ -342,5 +343,19 @@ public final class Common {
         }
 
         throw new IllegalArgumentException("Invalid integer sequence: " + str);
+    }
+
+    public static boolean isPluginEnabled(String name) {
+        if (Bukkit.getPluginManager().isPluginEnabled(name)) return true;
+        else {
+            throw new PluginDisabledException(name, false);
+        }
+    }
+
+    public static boolean isPluginEnabled(String name, boolean disable) {
+        if (Bukkit.getPluginManager().isPluginEnabled(name)) return true;
+        else {
+            throw new PluginDisabledException(name, disable);
+        }
     }
 }
