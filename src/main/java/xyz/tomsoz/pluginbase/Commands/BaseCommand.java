@@ -107,6 +107,7 @@ public abstract class BaseCommand extends Command {
             CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
             commandMap.register(Common.getName(), this);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -116,7 +117,7 @@ public abstract class BaseCommand extends Command {
     public boolean execute(@NotNull CommandSender commandSender, @NotNull String s, @NotNull String[] strings) {
         Translator messages = Translator.create();
 
-        if (!s.equalsIgnoreCase(this.name) && !Arrays.asList(this.aliases).contains(this.name)) {
+        if (!s.equalsIgnoreCase(this.name) && !Arrays.asList(this.aliases).contains(s)) {
             return true;
         }
 
