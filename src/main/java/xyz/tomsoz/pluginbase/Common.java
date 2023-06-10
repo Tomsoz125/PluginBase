@@ -360,4 +360,9 @@ public final class Common {
             return false;
         }
     }
+
+    public static String secondsToString(int pTime) {
+        if ((pTime % 3600) > 0) return String.format("%02d:%02d:%02d", pTime / 3600, (pTime % 3600) / 60, pTime % 60);
+        else return String.format("%02d:%02d", pTime / 60, pTime % 60);
+    }
 }
