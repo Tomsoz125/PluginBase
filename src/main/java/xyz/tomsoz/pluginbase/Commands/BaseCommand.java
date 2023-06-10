@@ -106,7 +106,7 @@ public abstract class BaseCommand extends Command {
             bukkitCommandMap.setAccessible(true);
             CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
-            commandMap.register(this.name, this);
+            commandMap.register(Common.getName(), this);
         } catch (Exception e) {
             e.printStackTrace();
         }
