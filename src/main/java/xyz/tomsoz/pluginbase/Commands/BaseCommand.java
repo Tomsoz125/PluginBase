@@ -99,7 +99,7 @@ public abstract class BaseCommand extends Command {
 
     protected abstract void run(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args);
 
-    public void register() {
+    public BaseCommand register() {
         try {
             final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 
@@ -111,28 +111,30 @@ public abstract class BaseCommand extends Command {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return this;
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender commandSender, @NotNull String s, @NotNull String[] strings) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         Translator messages = Translator.create();
 
-        if (!s.equalsIgnoreCase(this.name) && !Arrays.asList(this.aliases).contains(s)) {
+        if (!label.equalsIgnoreCase(this.name) && !Arrays.asList(this.aliases).contains(label)) {
             return true;
         }
 
-        if (this.playerOnly && !(commandSender instanceof Player)) {
-            Text.tell(commandSender, messages.get("commands.must-be-player"));
+        if (this.playerOnly && !(sender instanceof Player)) {
+            Text.tell(sender, messages.get("commands.must-be-player"));
             return true;
         }
 
-        if (this.consoleOnly && (commandSender instanceof Player)) {
-            Text.tell(commandSender, messages.get("commands.must-be-console"));
+        if (this.consoleOnly && (sender instanceof Player)) {
+            Text.tell(sender, messages.get("commands.must-be-console"));
             return true;
         }
 
-        if (!(this.permission == null) && !commandSender.hasPermission(this.permission)) {
-            Text.tell(commandSender, messages.get("commands.no-permission"));
+        if (!(this.permission == null) && !sender.hasPermission(this.permission)) {
+            Text.tell(sender, messages.get("commands.no-permission"));
             return true;
         }
 
@@ -140,7 +142,7 @@ public abstract class BaseCommand extends Command {
             int required = 0;
 
             StringBuilder usageStr = new StringBuilder();
-            usageStr.append(s);
+            usageStr.append(label);
 
             boolean valid = true;
             int i = 0;
@@ -154,26 +156,26 @@ public abstract class BaseCommand extends Command {
 
                 switch (a.getType()) {
                     case PLAYER:
-                        valid = Bukkit.getPlayerExact(strings[i]) != null;
+                        valid = Bukkit.getPlayerExact(args[i]) != null;
                     case STRING:
                         valid = true;
                     case BOOLEAN:
-                        valid = strings[i].equalsIgnoreCase("true") || strings[i].equalsIgnoreCase("false");
+                        valid = args[i].equalsIgnoreCase("true") || args[i].equalsIgnoreCase("false");
                     case INTEGER:
-                        valid = Common.checkInt(strings[i]) != null;
+                        valid = Common.checkInt(args[i]) != null;
                     case EXPONENT:
-                        valid = strings.length > 0;
+                        valid = args.length > 0;
                 }
                 i++;
             }
 
             if (!(args.length >= required) || !valid) {
-                Text.tell(commandSender, messages.get("commands.invalid-usage", usageStr.toString()));
+                Text.tell(sender, messages.get("commands.invalid-usage", usageStr.toString()));
                 return true;
             }
         }
 
-        run(commandSender, s, strings);
+        run(sender, label, args);
         return true;
     }
 }
