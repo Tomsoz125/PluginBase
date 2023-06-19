@@ -4,5 +4,6 @@ public enum ArgumentType {
     STRING,
     PLAYER,
     INTEGER,
-    BOOLEAN
+    BOOLEAN,
+    EXPONENT
 }

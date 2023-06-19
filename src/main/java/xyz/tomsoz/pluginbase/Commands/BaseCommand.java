@@ -161,6 +161,8 @@ public abstract class BaseCommand extends Command {
                         valid = strings[i].equalsIgnoreCase("true") || strings[i].equalsIgnoreCase("false");
                     case INTEGER:
                         valid = Common.checkInt(strings[i]) != null;
+                    case EXPONENT:
+                        valid = strings.length > 0;
                 }
                 i++;
             }

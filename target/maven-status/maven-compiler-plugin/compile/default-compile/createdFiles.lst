@@ -35,7 +35,6 @@ xyz\tomsoz\pluginbase\Event\Functional\Single\BaseEventListener.class
 xyz\tomsoz\pluginbase\Event\Functional\Single\SingleSubscriptionBuilder.class
 xyz\tomsoz\pluginbase\PluginBase.class
 xyz\tomsoz\pluginbase\Terminable\Composite\CompositeTerminable.class
-xyz\tomsoz\pluginbase\Commands\IBaseCommand.class
 xyz\tomsoz\pluginbase\Terminable\Module\TerminableModule.class
 xyz\tomsoz\pluginbase\Event\Functional\Merged\MergedHandlerListImpl.class
 xyz\tomsoz\pluginbase\Locale\Reader\ConfigLocaleReader.class
