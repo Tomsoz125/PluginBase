@@ -1,8 +1,10 @@
 package xyz.tomsoz.pluginbase.Events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class BaseEvent<T extends Event> implements Listener {
 
@@ -12,4 +14,9 @@ public abstract class BaseEvent<T extends Event> implements Listener {
     }
 
     protected abstract void event(T e);
+
+    public BaseEvent<T> register(JavaPlugin plugin) {
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+        return this;
+    }
 }
