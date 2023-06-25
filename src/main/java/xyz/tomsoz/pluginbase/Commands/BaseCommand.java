@@ -46,6 +46,8 @@ public abstract class BaseCommand extends Command {
         this.args = args;
         this.instance = instance;
         this.playerOnly = playerOnly;
+
+        register();
     }
 
     public BaseCommand(@NotNull String description, @Nullable String permission, @NotNull String name, @Nullable String[] aliases, @Nullable Argument[] args, boolean playerOnly) {
@@ -56,6 +58,8 @@ public abstract class BaseCommand extends Command {
         this.aliases = aliases;
         this.args = args;
         this.playerOnly = playerOnly;
+
+        register();
     }
 
     public BaseCommand(@NotNull String description, @NotNull String name, @Nullable String[] aliases, @Nullable Argument[] args, boolean playerOnly) {
@@ -65,6 +69,8 @@ public abstract class BaseCommand extends Command {
         this.aliases = aliases;
         this.args = args;
         this.playerOnly = playerOnly;
+
+        register();
     }
 
     public BaseCommand(@NotNull String description, @NotNull String name, @Nullable String[] aliases, boolean playerOnly) {
@@ -73,6 +79,8 @@ public abstract class BaseCommand extends Command {
         this.description = description;
         this.aliases = aliases;
         this.playerOnly = playerOnly;
+
+        register();
     }
 
     public BaseCommand(@NotNull String description, @NotNull String name, boolean playerOnly) {
@@ -80,6 +88,17 @@ public abstract class BaseCommand extends Command {
         this.name = name;
         this.description = description;
         this.playerOnly = playerOnly;
+
+        register();
+    }
+
+    public BaseCommand(@NotNull String description, @NotNull String name, @Nullable Argument[] args) {
+        super(name, description, "", new ArrayList<>());
+        this.name = name;
+        this.description = description;
+        this.args = args;
+
+        register();
     }
 
     public BaseCommand(@NotNull String description, @NotNull String name, @Nullable String permission, boolean playerOnly) {
@@ -88,6 +107,8 @@ public abstract class BaseCommand extends Command {
         this.description = description;
         this.playerOnly = playerOnly;
         this.permission = permission;
+
+        register();
     }
 
     public BaseCommand(@NotNull String description, @NotNull String name) {
@@ -95,8 +116,15 @@ public abstract class BaseCommand extends Command {
         this.name = name;
         this.description = description;
         this.playerOnly = false;
+
+        register();
     }
 
+    /**
+     * @param sender The sender of the command.
+     * @param label  The label of the command executed.
+     * @param args   The supplied arguments.
+     */
     protected abstract void run(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args);
 
     public BaseCommand register() {
