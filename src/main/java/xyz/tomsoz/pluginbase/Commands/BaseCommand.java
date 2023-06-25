@@ -156,20 +156,20 @@ public abstract class BaseCommand extends Command {
 
                 switch (a.getType()) {
                     case PLAYER:
-                        valid = Bukkit.getPlayerExact(args[i]) != null;
+                        valid = !a.isRequired() || (args.length >= (i + 1) && (Bukkit.getPlayerExact(args[i]) != null));
                     case STRING:
-                        valid = true;
+                        valid = !a.isRequired() || args.length >= (i + 1);
                     case BOOLEAN:
-                        valid = args[i].equalsIgnoreCase("true") || args[i].equalsIgnoreCase("false");
+                        valid = !a.isRequired() || (args.length >= (i + 1) && args[i].equalsIgnoreCase("true") || args[i].equalsIgnoreCase("false"));
                     case INTEGER:
-                        valid = Common.checkInt(args[i]) != null;
+                        valid = !a.isRequired() || (args.length >= (i + 1) && Common.checkInt(args[i]) != null);
                     case EXPONENT:
-                        valid = args.length > 0;
+                        valid = !a.isRequired() || args.length > 0;
                 }
                 i++;
             }
 
-            if (!(args.length >= required) || !valid) {
+            if (!valid) {
                 Text.tell(sender, messages.get("commands.invalid-usage", usageStr.toString()));
                 return true;
             }
