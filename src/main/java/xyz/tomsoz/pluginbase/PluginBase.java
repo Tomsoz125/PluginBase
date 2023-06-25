@@ -1,6 +1,5 @@
 package xyz.tomsoz.pluginbase;
 
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +23,6 @@ public abstract class PluginBase extends JavaPlugin {
     public final void onEnable() {
         PluginManager.setTranslator(Translator.create());
         PluginManager.setEventManager(new EventManager(this));
-        //PluginManager.setAdventure(BukkitAudiences.create(this));
 
         enable();
     }
@@ -32,11 +30,6 @@ public abstract class PluginBase extends JavaPlugin {
     @Override
     public final void onDisable() {
         disable();
-
-        if (getAdventure() != null) {
-            getAdventure().close();
-            PluginManager.setAdventure(null);
-        }
     }
 
     /**
@@ -72,15 +65,6 @@ public abstract class PluginBase extends JavaPlugin {
      */
     public Translator getTranslator() {
         return PluginManager.getTranslator();
-    }
-
-    /**
-     * Gets the BukkitAudiences instance to use for Adventure.
-     *
-     * @return The BukkitAudiences instance to use for Adventure
-     */
-    public BukkitAudiences getAdventure() {
-        return PluginManager.getAdventure();
     }
 
     /**

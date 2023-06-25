@@ -4,9 +4,6 @@ import com.cryptomorin.xseries.messages.Titles;
 import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -31,13 +28,11 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Text {
     private static final String IGNORE_MESSAGE_VALUE = "ignore";
-    private static final String MINI_PREFIX = "mini:";
     public static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]){6}");
     public static final Pattern GRADIENT_PATTERN = Pattern.compile("<GRADIENT:([0-9A-Fa-f]{6})>(.*?)</GRADIENT:([0-9A-Fa-f]{6})>");
     public static final Pattern RAINBOW_PATTERN = Pattern.compile("<RAINBOW>(.*?)</RAINBOW>");
     public static final String CHAT_LINE = "&m-----------------------------------------------------";
     public static final String CONSOLE_LINE = "*-----------------------------------------------------*";
-    public static final MiniMessage MINI_MESSAGE = MiniMessage.builder().build();
 
     private static final List<String> SPECIAL_COLORS = Arrays.asList("&l", "&n", "&o", "&k", "&m", "§l", "§n", "§o", "§k", "§m");
 
@@ -438,46 +433,6 @@ public class Text {
     }
 
     /**
-     * Parses the string using the MiniMessage library. Format:
-     * https://docs.advntr.dev/minimessage/format.html
-     *
-     * @param str The raw string
-     * @return The result component for the string, or empty if the provided string is null
-     */
-    @NotNull
-    public static Component parseMini(@Nullable final String str) {
-        if (str == null) return Component.empty();
-
-        return MINI_MESSAGE.deserialize(str);
-    }
-
-    /**
-     * Parses the string using the MiniMessage library, and then uses the legacy Bukkit Component
-     * Serializer to return a String rather than a Component. Format:
-     * https://docs.advntr.dev/minimessage/format.html
-     *
-     * @param str The raw string(s)
-     * @return The serialized component for the string, or empty if the provided string is null
-     */
-    @NotNull
-    public static String legacyParseMini(@Nullable final String str) {
-        return legacySerialize(parseMini(str));
-    }
-
-    /**
-     * Serializes an Adventure {@link Component} using the legacy Bukkit Component Serializer, which
-     * can be useful for displaying components in areas other than the chat (ex. item names).
-     *
-     * @param component The component to serialize
-     * @return The serialized component
-     * @see #legacyParseMini(String)
-     */
-    @NotNull
-    public static String legacySerialize(@NotNull final Component component) {
-        return BukkitComponentSerializer.legacy().serialize(component);
-    }
-
-    /**
      * Fully strip all color from the string.
      *
      * @param str The string to strip
@@ -606,9 +561,7 @@ public class Text {
     public static void tell(@NotNull final CommandSender sender, @Nullable final String str) {
         if (str == null || str.equalsIgnoreCase(IGNORE_MESSAGE_VALUE)) return;
 
-        if (!attemptTellMini(sender, str)) {
-            sender.sendMessage(format(str));
-        }
+        sender.sendMessage(format(str));
     }
 
     /**
@@ -631,9 +584,7 @@ public class Text {
 
         if (message.equalsIgnoreCase(IGNORE_MESSAGE_VALUE)) return;
 
-        if (!attemptTellMini(sender, message)) {
-            sender.sendMessage(format(message));
-        }
+        sender.sendMessage(format(message));
     }
 
     /**
@@ -646,9 +597,7 @@ public class Text {
     public static void colouredTell(@NotNull final CommandSender sender, @Nullable final String str) {
         if (str == null || str.equalsIgnoreCase(IGNORE_MESSAGE_VALUE)) return;
 
-        if (!attemptTellMini(sender, str)) {
-            sender.sendMessage(colourize(str));
-        }
+        sender.sendMessage(colourize(str));
     }
 
     /**
@@ -671,20 +620,7 @@ public class Text {
 
         if (message.equalsIgnoreCase(IGNORE_MESSAGE_VALUE)) return;
 
-        if (!attemptTellMini(sender, message)) {
-            sender.sendMessage(colourize(message));
-        }
-    }
-
-    /**
-     * Sends the {@link Component} to the player as a chat message.
-     *
-     * @param player    The player who should receive the component
-     * @param component The component to send
-     * @see #parseMini(String)
-     */
-    public static void tellComponent(@NotNull final Player player, @NotNull final Component component) {
-        PluginManager.getAdventure().player(player).sendMessage(component);
+        sender.sendMessage(colourize(message));
     }
 
     /**
@@ -817,19 +753,5 @@ public class Text {
      */
     public static void clearTitle(@NotNull final Player p) {
         Titles.clearTitle(p);
-    }
-
-
-    // ---------------------------------------------------------------------------------
-    // INTERNAL
-    // ---------------------------------------------------------------------------------
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private static boolean attemptTellMini(final CommandSender sender, final String str) {
-        if (!(sender instanceof Player)) return false;
-        if (!str.startsWith(MINI_PREFIX)) return false;
-
-        tellComponent((Player)sender, parseMini(str.replaceFirst(MINI_PREFIX, "")));
-        return true;
     }
 }
