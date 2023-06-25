@@ -6,6 +6,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import xyz.tomsoz.pluginbase.Events.EventManager;
 import xyz.tomsoz.pluginbase.Exceptions.APIException;
 import xyz.tomsoz.pluginbase.Locale.Translator;
 
@@ -16,6 +17,9 @@ import xyz.tomsoz.pluginbase.Locale.Translator;
 public class PluginManager {
 
     private static JavaPlugin plugin = null;
+    @Getter
+    @Setter
+    private static EventManager eventManager = null;
     private static Thread mainThread = null;
 
     /**

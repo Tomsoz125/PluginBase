@@ -1,7 +1,6 @@
 package xyz.tomsoz.pluginbase.Events;
 
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,9 +20,4 @@ public abstract class BaseEvent<T extends Event> implements Listener {
     }
 
     protected abstract void event(T e);
-
-    public BaseEvent<T> register() {
-        Bukkit.getPluginManager().registerEvents(this, instance);
-        return this;
-    }
 }
