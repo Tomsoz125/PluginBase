@@ -1,7 +1,5 @@
 package xyz.tomsoz.pluginbase.Events;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import xyz.tomsoz.pluginbase.PluginManager;
@@ -9,8 +7,6 @@ import xyz.tomsoz.pluginbase.PluginManager;
 import java.util.ArrayList;
 
 public class EventManager {
-    @Getter
-    @Setter
     public static ArrayList<Class<?>> events = new ArrayList<>();
 
     public void registerAll() {

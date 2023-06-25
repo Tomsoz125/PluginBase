@@ -4,6 +4,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.tomsoz.pluginbase.Events.EventManager;
 import xyz.tomsoz.pluginbase.Locale.Translator;
 
 /**
@@ -22,6 +23,7 @@ public abstract class PluginBase extends JavaPlugin {
     @Override
     public final void onEnable() {
         PluginManager.setTranslator(Translator.create());
+        PluginManager.setEventManager(new EventManager());
         //PluginManager.setAdventure(BukkitAudiences.create(this));
 
         enable();
