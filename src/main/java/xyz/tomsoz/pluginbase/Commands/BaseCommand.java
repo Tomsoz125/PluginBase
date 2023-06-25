@@ -92,11 +92,12 @@ public abstract class BaseCommand extends Command {
         register();
     }
 
-    public BaseCommand(@NotNull String description, @NotNull String name, @Nullable Argument[] args) {
+    public BaseCommand(@NotNull String description, @NotNull String name, @Nullable Argument[] args, @Nullable String permission) {
         super(name, description, "", new ArrayList<>());
         this.name = name;
         this.description = description;
         this.args = args;
+        this.permission = permission;
 
         register();
     }
