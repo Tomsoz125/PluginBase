@@ -1,13 +1,10 @@
 package xyz.tomsoz.pluginbase;
 
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.tomsoz.pluginbase.Locale.Translator;
-
-import java.util.Objects;
 
 /**
  * An extended version of JavaPlugin. It is recommended that you extend this in your main class, but
@@ -55,22 +52,6 @@ public abstract class PluginBase extends JavaPlugin {
      */
     protected void disable() {}
 
-    /**
-     * Register a listener with the server.
-     *
-     * <p>{@link xyz.tomsoz.pluginbase.Event} should be used instead of this method in most
-     * cases.</p>
-     *
-     * @param listener the listener to register
-     * @param <T>      the listener class type
-     * @return the listener
-     */
-    @NotNull
-    public <T extends Listener> T registerListener(@NotNull final T listener) {
-        Objects.requireNonNull(listener, "listener");
-        getServer().getPluginManager().registerEvents(listener, this);
-        return listener;
-    }
 
     /**
      * Gets if a given plugin is enabled.
