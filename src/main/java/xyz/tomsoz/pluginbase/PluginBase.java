@@ -22,7 +22,7 @@ public abstract class PluginBase extends JavaPlugin {
     @Override
     public final void onEnable() {
         PluginManager.setTranslator(Translator.create());
-        PluginManager.setAdventure(BukkitAudiences.create(this));
+        //PluginManager.setAdventure(BukkitAudiences.create(this));
 
         enable();
     }
