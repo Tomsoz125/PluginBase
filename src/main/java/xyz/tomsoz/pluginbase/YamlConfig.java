@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.io.IOException;
  * A standard YAML configuration file with several shortcuts to common methods including such as
  * reloading or saving.
  */
-public class YamlConfig {
+public class YamlConfig extends FileConfiguration {
 
     /**
      * The name of the key that stores an integer value, which is the current configuration file
@@ -83,5 +84,27 @@ public class YamlConfig {
      */
     public boolean isOutdated(final int currentVersion) {
         return config.getInt(VERSION_KEY, -1) < currentVersion;
+    }
+
+    /**
+     * Gets the string value at the specified path, otherwise returns the provided default value.
+     *
+     * @param path  The path to get the string from.
+     * @param other The value that will be returned if the string is null.
+     * @return The value at the path, if it doesn't exist the default value provided will be returned.
+     */
+    public String getOrDefault(String path, String other) {
+        return config.getString(path) == null ? other : config.getString(path);
+    }
+
+    @NotNull
+    @Override
+    public String saveToString() {
+        return config.saveToString();
+    }
+
+    @Override
+    public void loadFromString(@NotNull String s) throws InvalidConfigurationException {
+        config.loadFromString(s);
     }
 }
