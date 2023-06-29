@@ -1725,9 +1725,9 @@ public class User implements IUser {
         return p.isAllowingServerListings();
     }
 
-    @NotNull
     @Override
-    public Spigot spigot() {
+    @NotNull
+    public Player.Spigot spigot() {
         return p.spigot();
     }
 
