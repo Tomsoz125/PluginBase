@@ -8,28 +8,28 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import xyz.tomsoz.pluginbase.Common;
 import xyz.tomsoz.pluginbase.Locale.Translator;
+import xyz.tomsoz.pluginbase.Permission;
 import xyz.tomsoz.pluginbase.Text.Text;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Extend this on your command classes.
  */
 public abstract class BaseCommand extends Command {
     @Getter
-    protected String permission;
+    protected Permission permission;
     @Getter
     protected String name;
     @Getter
     protected String description;
     protected String[] aliases;
     @Getter
-    protected Argument[] args;
+    protected Arguments args;
     @Getter
     protected JavaPlugin instance;
     @Getter
@@ -37,20 +37,7 @@ public abstract class BaseCommand extends Command {
     @Getter
     protected boolean consoleOnly;
 
-    public BaseCommand(@NotNull JavaPlugin instance, @NotNull String description, @Nullable String permission, @NotNull String name, @Nullable String[] aliases, @Nullable Argument[] args, boolean playerOnly) {
-        super(name, description, "", Arrays.asList(aliases));
-        this.permission = permission;
-        this.description = description;
-        this.name = name;
-        this.aliases = aliases;
-        this.args = args;
-        this.instance = instance;
-        this.playerOnly = playerOnly;
-
-        register();
-    }
-
-    public BaseCommand(@NotNull String description, @Nullable String permission, @NotNull String name, @Nullable String[] aliases, @Nullable Argument[] args, boolean playerOnly) {
+    public BaseCommand(@NotNull String name, @NotNull String description, @NotNull Permission permission, @NotNull String[] aliases, @NotNull Arguments args, boolean playerOnly) {
         super(name, description, "", Arrays.asList(aliases));
         this.permission = permission;
         this.description = description;
@@ -58,65 +45,6 @@ public abstract class BaseCommand extends Command {
         this.aliases = aliases;
         this.args = args;
         this.playerOnly = playerOnly;
-
-        register();
-    }
-
-    public BaseCommand(@NotNull String description, @NotNull String name, @Nullable String[] aliases, @Nullable Argument[] args, boolean playerOnly) {
-        super(name, description, "", Arrays.asList(aliases));
-        this.name = name;
-        this.description = description;
-        this.aliases = aliases;
-        this.args = args;
-        this.playerOnly = playerOnly;
-
-        register();
-    }
-
-    public BaseCommand(@NotNull String description, @NotNull String name, @Nullable String[] aliases, boolean playerOnly) {
-        super(name, description, "", Arrays.asList(aliases));
-        this.name = name;
-        this.description = description;
-        this.aliases = aliases;
-        this.playerOnly = playerOnly;
-
-        register();
-    }
-
-    public BaseCommand(@NotNull String description, @NotNull String name, boolean playerOnly) {
-        super(name, description, "", new ArrayList<>());
-        this.name = name;
-        this.description = description;
-        this.playerOnly = playerOnly;
-
-        register();
-    }
-
-    public BaseCommand(@NotNull String description, @NotNull String name, @Nullable Argument[] args, @Nullable String permission) {
-        super(name, description, "", new ArrayList<>());
-        this.name = name;
-        this.description = description;
-        this.args = args;
-        this.permission = permission;
-
-        register();
-    }
-
-    public BaseCommand(@NotNull String description, @NotNull String name, @Nullable String permission, boolean playerOnly) {
-        super(name, description, "", new ArrayList<>());
-        this.name = name;
-        this.description = description;
-        this.playerOnly = playerOnly;
-        this.permission = permission;
-
-        register();
-    }
-
-    public BaseCommand(@NotNull String description, @NotNull String name) {
-        super(name, description, "", new ArrayList<>());
-        this.name = name;
-        this.description = description;
-        this.playerOnly = false;
 
         register();
     }
@@ -126,7 +54,7 @@ public abstract class BaseCommand extends Command {
      * @param label  The label of the command executed.
      * @param args   The supplied arguments.
      */
-    protected abstract void run(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args);
+    protected abstract void run(@NotNull Sender sender, @NotNull String label, @NotNull Arguments args);
 
     public BaseCommand register() {
         try {
@@ -161,49 +89,31 @@ public abstract class BaseCommand extends Command {
             return true;
         }
 
-        if (!(this.permission == null) && !sender.hasPermission(this.permission)) {
+        if (!(this.permission == null) && !permission.has(sender)) {
             Text.tell(sender, messages.get("commands.no-permission"));
             return true;
         }
 
-        if (this.args != null) {
-            int required = 0;
+        int i = 0;
+        for (String a : args) {
+            this.args.getIndex(i).setValue(a);
+            this.args.getIndex(i).setArgs(this.args);
 
-            StringBuilder usageStr = new StringBuilder();
-            usageStr.append(label);
-
-            boolean valid = true;
-            int i = 0;
-            for (Argument a : this.args) {
-                if (a.isRequired()) {
-                    required++;
-                    usageStr.append(" <").append(a.getName()).append(">");
-                } else {
-                    usageStr.append(" [").append(a.getName()).append("]");
-                }
-
-                switch (a.getType()) {
-                    case PLAYER:
-                        valid = !a.isRequired() || (args.length >= (i + 1) && (Bukkit.getPlayerExact(args[i]) != null));
-                    case STRING:
-                        valid = !a.isRequired() || args.length >= (i + 1);
-                    case BOOLEAN:
-                        valid = !a.isRequired() || (args.length >= (i + 1) && args[i].equalsIgnoreCase("true") || args[i].equalsIgnoreCase("false"));
-                    case INTEGER:
-                        valid = !a.isRequired() || (args.length >= (i + 1) && Common.checkInt(args[i]) != null);
-                    case EXPONENT:
-                        valid = !a.isRequired() || args.length > 0;
-                }
-                i++;
-            }
-
-            if (!valid) {
-                Text.tell(sender, messages.get("commands.invalid-usage", usageStr.toString()));
-                return true;
-            }
+            i++;
         }
 
-        run(sender, label, args);
+        AtomicBoolean valid = new AtomicBoolean(true);
+        this.args.forEach((a) -> {
+            if (!a.validate()) {
+                Text.tell(sender, messages.get("commands.invalid-usage", this.args.usage()));
+                valid.set(false);
+            }
+        });
+
+        if (valid.get()) {
+            run(new Sender(sender), label, this.args);
+        }
+
         return true;
     }
 }
