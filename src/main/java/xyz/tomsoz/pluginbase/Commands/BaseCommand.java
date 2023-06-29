@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public abstract class BaseCommand extends Command {
     @Getter
-    protected Permission permission;
+    protected Permission perm;
     @Getter
     protected String name;
     @Getter
@@ -39,7 +39,7 @@ public abstract class BaseCommand extends Command {
 
     public BaseCommand(@NotNull String name, @NotNull String description, @NotNull Permission permission, @NotNull String[] aliases, @NotNull Arguments args, boolean playerOnly) {
         super(name, description, "", Arrays.asList(aliases));
-        this.permission = permission;
+        this.perm = permission;
         this.description = description;
         this.name = name;
         this.aliases = aliases;
@@ -89,7 +89,7 @@ public abstract class BaseCommand extends Command {
             return true;
         }
 
-        if (!(this.permission == null) && !permission.has(sender)) {
+        if (!(this.perm == null) && !perm.has(sender)) {
             Text.tell(sender, messages.get("commands.no-permission"));
             return true;
         }
