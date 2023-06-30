@@ -26,9 +26,14 @@ public class CommandBuilder {
         this.command = clazz;
     }
 
-    public BaseCommand build() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public BaseCommand build() {
         if (!BaseCommand.class.isAssignableFrom(command)) return null;
-        return (BaseCommand) command.getDeclaredConstructor(new Class[6]).newInstance(name, description, permission, aliases, args, playerOnly);
+        try {
+            return (BaseCommand) command.getDeclaredConstructor(new Class[6]).newInstance(name, description, permission, aliases, args, playerOnly);
+        } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public CommandBuilder name(String name) {
