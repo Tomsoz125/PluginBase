@@ -26,10 +26,10 @@ public class CommandBuilder {
         this.command = clazz;
     }
 
-    public BaseCommand build() {
+    public <C extends BaseCommand> C build() {
         if (!BaseCommand.class.isAssignableFrom(command)) return null;
         try {
-            return (BaseCommand) command.getDeclaredConstructor(new Class[6]).newInstance(name, description, permission, aliases, args, playerOnly);
+            return (C) command.getDeclaredConstructor(new Class[6]).newInstance(name, description, permission, aliases, args, playerOnly);
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
                  IllegalAccessException e) {
             throw new RuntimeException(e);
