@@ -4,6 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Arguments {
     private LinkedHashMap<String, Argument> arguments;
@@ -35,6 +38,18 @@ public class Arguments {
 
     public Argument getIndex(int index) {
         return (Argument) arguments.values().toArray()[index];
+    }
+
+    public Stream<Argument> stream() {
+        return arguments.values().stream();
+    }
+
+    public String joined(Predicate<String> filter) {
+        return stream().map(Argument::getValue).filter(filter).collect(Collectors.joining(" "));
+    }
+
+    public String joined() {
+        return stream().map(Argument::getValue).collect(Collectors.joining(" "));
     }
 
     public int size() {
