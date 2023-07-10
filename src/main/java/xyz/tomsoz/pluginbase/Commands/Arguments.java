@@ -53,7 +53,7 @@ public class Arguments {
     }
 
     public int size() {
-        return arguments.size();
+        return (int) stream().filter(a -> a.getValue() != null).count();
     }
 
     public void forEach(@NotNull Consumer<Argument> consumer) {
