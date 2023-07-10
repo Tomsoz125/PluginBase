@@ -53,7 +53,7 @@ public class Arguments {
     }
 
     public int size() {
-        return (int) stream().filter(a -> a.getValue() != null).count();
+        return stream().filter(a -> a.getValue() != null).collect(Collectors.toList()).size();
     }
 
     public void forEach(@NotNull Consumer<Argument> consumer) {
