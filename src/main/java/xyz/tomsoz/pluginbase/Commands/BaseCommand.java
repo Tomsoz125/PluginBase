@@ -125,5 +125,7 @@ public abstract class BaseCommand extends Command {
     /**
      * @return The builder for this command.
      */
-    public abstract CommandBuilder builder();
+    public static CommandBuilder builder() {
+        return null;
+    }
 }
