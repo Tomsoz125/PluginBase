@@ -2,6 +2,7 @@ package xyz.tomsoz.pluginbase.Commands;
 
 import lombok.Getter;
 import xyz.tomsoz.pluginbase.Permission;
+import xyz.tomsoz.pluginbase.Text.Text;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -29,7 +30,8 @@ public class CommandBuilder {
     public <C extends BaseCommand> C build() {
         if (!BaseCommand.class.isAssignableFrom(command)) return null;
         try {
-            return (C) command.getDeclaredConstructor(new Class[6]).newInstance(name, description, permission, aliases, args, playerOnly);
+            Text.broadcast("f", this.name);
+            return (C) command.getDeclaredConstructor(BaseCommand.class).newInstance(this.name, this.description, this.permission, this.aliases, this.args, this.playerOnly);
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
                  IllegalAccessException e) {
             throw new RuntimeException(e);
