@@ -71,4 +71,8 @@ public class Arguments {
         });
         return usageStr.toString();
     }
+
+    public void clearValues() {
+        forEach(a -> a.setValue(null));
+    }
 }

@@ -94,31 +94,30 @@ public abstract class BaseCommand extends Command {
             return true;
         }
 
-        Arguments args1 = this.args;
-
         int i = 0;
+        this.args.clearValues();
         for (String a : args) {
-            if (args1.getIndex(i).validateNoVal()) {
-                if (args1.getIndex(i).getType().equals(ArgumentType.EXPONENT)) {
-                    args1.getIndex(i).setValue(String.join(" ", Arrays.asList(args).subList(i, args.length - 1)));
+            if (this.args.getIndex(i).validateNoVal()) {
+                if (this.args.getIndex(i).getType().equals(ArgumentType.EXPONENT)) {
+                    this.args.getIndex(i).setValue(String.join(" ", Arrays.asList(args).subList(i, args.length - 1)));
                 } else {
-                    args1.getIndex(i).setValue(a);
+                    this.args.getIndex(i).setValue(a);
                 }
-                args1.getIndex(i).setArgs(args1);
+                this.args.getIndex(i).setArgs(this.args);
             }
             i++;
         }
 
         AtomicBoolean valid = new AtomicBoolean(true);
-        args1.forEach((a) -> {
+        this.args.forEach((a) -> {
             if (!a.validate()) {
-                Text.tell(sender, messages.get("commands.invalid-usage", label + args1.usage()));
+                Text.tell(sender, messages.get("commands.invalid-usage", label + this.args.usage()));
                 valid.set(false);
             }
         });
 
         if (valid.get()) {
-            run(new Sender(sender), label, args1);
+            run(new Sender(sender), label, this.args);
         }
 
         return true;
