@@ -82,8 +82,6 @@ public abstract class BaseCommand extends Command {
             CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
             this.unregister(commandMap);
-
-            PluginManager.commands.remove(this);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }

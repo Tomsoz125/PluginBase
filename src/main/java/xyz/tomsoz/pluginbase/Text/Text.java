@@ -375,7 +375,7 @@ public class Text {
         }
 
         if (Common.SPIGOT && Common.isServerVersionAtLeast(16)) {
-            message = rainbow(gradient(message), 1f);
+            message = rainbow(gradient(message), 0.75f);
 
             Matcher matcher = HEX_PATTERN.matcher(message);
 

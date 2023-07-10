@@ -33,6 +33,7 @@ public abstract class PluginBase extends JavaPlugin {
         for (BaseCommand cmd : PluginManager.commands) {
             cmd.unregister();
         }
+        PluginManager.commands.clear();
 
         disable();
     }
