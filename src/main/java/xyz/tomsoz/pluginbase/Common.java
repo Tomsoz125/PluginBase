@@ -346,10 +346,7 @@ public final class Common {
     }
 
     public static boolean isPluginEnabled(String name) {
-        if (Bukkit.getPluginManager().isPluginEnabled(name)) return true;
-        else {
-            return false;
-        }
+        return Bukkit.getPluginManager().isPluginEnabled(name);
     }
 
     public static boolean isPluginEnabled(String name, boolean disable) {

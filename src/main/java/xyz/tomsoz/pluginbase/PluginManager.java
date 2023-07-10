@@ -5,9 +5,12 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import xyz.tomsoz.pluginbase.Commands.BaseCommand;
 import xyz.tomsoz.pluginbase.Events.EventManager;
 import xyz.tomsoz.pluginbase.Exceptions.APIException;
 import xyz.tomsoz.pluginbase.Locale.Translator;
+
+import java.util.ArrayList;
 
 /**
  * A manager containing all other managers associated with the library, as well as the
@@ -21,15 +24,24 @@ public class PluginManager {
     private static EventManager eventManager = null;
     private static Thread mainThread = null;
 
+    public static ArrayList<BaseCommand> commands = new ArrayList<>();
+
     /**
      * The translator used for handling localized messages.
      */
-    @NotNull @Getter @Setter private static BaseSettings baseSettings = new BaseSettings() {};
+    @NotNull
+    @Getter
+    @Setter
+    private static BaseSettings baseSettings = new BaseSettings() {
+    };
 
     /**
      * The settings the library should use.
      */
-    @NotNull @Getter @Setter private static Translator translator;
+    @NotNull
+    @Getter
+    @Setter
+    private static Translator translator;
 
     /**
      * Gets a never-null instance of the {@link JavaPlugin} the library is currently working with.

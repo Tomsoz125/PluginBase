@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.tomsoz.pluginbase.Common;
 import xyz.tomsoz.pluginbase.Locale.Translator;
 import xyz.tomsoz.pluginbase.Permission;
+import xyz.tomsoz.pluginbase.PluginManager;
 import xyz.tomsoz.pluginbase.Text.Text;
 
 import java.lang.reflect.Field;
@@ -64,8 +65,27 @@ public abstract class BaseCommand extends Command {
             CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
             commandMap.register(Common.getName(), this);
+
+            PluginManager.commands.add(this);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        return this;
+    }
+
+    public BaseCommand unregister() {
+        final Field bukkitCommandMap;
+        try {
+            bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            bukkitCommandMap.setAccessible(true);
+            CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+
+            this.unregister(commandMap);
+
+            PluginManager.commands.remove(this);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
 
         return this;
