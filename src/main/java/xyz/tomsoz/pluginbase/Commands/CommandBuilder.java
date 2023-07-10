@@ -29,7 +29,7 @@ public class CommandBuilder {
     public <C extends BaseCommand> C build() {
         if (!BaseCommand.class.isAssignableFrom(command)) return null;
         try {
-            return (C) command.getDeclaredConstructor(BaseCommand.class).newInstance(getName(), getDescription(), getPermission(), getAliases(), getArgs(), playerOnly);
+            return (C) command.getDeclaredConstructor(String.class, String.class, Permission.class, String[].class, Arguments.class, boolean.class).newInstance(this.name, this.description, this.permission, this.aliases, this.args, this.playerOnly);
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
                  IllegalAccessException e) {
             throw new RuntimeException(e);
