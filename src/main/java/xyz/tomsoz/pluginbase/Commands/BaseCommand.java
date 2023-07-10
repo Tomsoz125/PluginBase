@@ -97,6 +97,9 @@ public abstract class BaseCommand extends Command {
         int i = 0;
         this.args.clearValues();
         for (String a : args) {
+            if (this.args.getIndex(i) == null) {
+                continue;
+            }
             if (this.args.getIndex(i).validateNoVal()) {
                 if (this.args.getIndex(i).getType().equals(ArgumentType.EXPONENT)) {
                     this.args.getIndex(i).setValue(String.join(" ", Arrays.asList(args).subList(i, args.length - 1)));

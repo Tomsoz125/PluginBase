@@ -37,7 +37,7 @@ public class Arguments {
     }
 
     public Argument getIndex(int index) {
-        return (Argument) arguments.values().toArray()[index];
+        return (Argument) (arguments.values().toArray().length > index ? arguments.values().toArray()[index] : null);
     }
 
     public Stream<Argument> stream() {
