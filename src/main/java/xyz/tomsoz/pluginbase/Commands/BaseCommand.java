@@ -96,7 +96,7 @@ public abstract class BaseCommand extends Command {
 
         int i = 0;
         for (String a : args) {
-            if (this.args.getIndex(i).validate()) {
+            if (this.args.getIndex(i).validateNoVal()) {
                 if (this.args.getIndex(i).getType().equals(ArgumentType.EXPONENT)) {
                     this.args.getIndex(i).setValue(String.join(" ", Arrays.asList(args).subList(i, args.length - 1)));
                 } else {
@@ -110,7 +110,7 @@ public abstract class BaseCommand extends Command {
         AtomicBoolean valid = new AtomicBoolean(true);
         this.args.forEach((a) -> {
             if (!a.validate()) {
-                Text.tell(sender, messages.get("commands.invalid-usage", this.args.usage()));
+                Text.tell(sender, messages.get("commands.invalid-usage", label + this.args.usage()));
                 valid.set(false);
             }
         });

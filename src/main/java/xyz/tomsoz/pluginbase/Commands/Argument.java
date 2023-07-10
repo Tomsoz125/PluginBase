@@ -45,4 +45,11 @@ public class Argument {
 
         return false;
     }
+
+    public boolean validateNoVal() {
+        if (type.equals(ArgumentType.EXPONENT) && !args.last().equals(this))
+            throw new ArgumentParseException("An exponent argument must be the last argument specified.");
+
+        return true;
+    }
 }
