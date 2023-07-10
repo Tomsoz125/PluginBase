@@ -101,7 +101,7 @@ public abstract class BaseCommand extends Command {
                 continue;
             }
             if (this.args.getIndex(i).getType().equals(ArgumentType.EXPONENT)) {
-                this.args.getIndex(i).setValue(String.join(" ", Arrays.asList(args).subList(i, args.length - 1)));
+                this.args.getIndex(i).setValue(String.join(" ", Arrays.asList(args).subList(i, args.length)));
             } else {
                 this.args.getIndex(i).setValue(a);
             }
