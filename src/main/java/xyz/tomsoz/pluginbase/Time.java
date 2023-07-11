@@ -283,4 +283,15 @@ public final class Time {
             }
         }
     }
+
+    public String formatSeconds(int secs) {
+        int milliseconds = secs * 1000;
+        int seconds = (int) (milliseconds / 1000) % 60;
+        int minutes = (int) ((milliseconds / (1000 * 60)) % 60);
+        int hours = (int) ((milliseconds / (1000 * 60 * 60)) % 24);
+        int days = (int) ((milliseconds / (1000 * 60 * 60 * 24)) % 7);
+        int weeks = (int) (milliseconds / (1000 * 60 * 60 * 24 * 7));
+
+        return (weeks < 1 ? "" : (weeks + (weeks == 1 ? " week" : " weeks"))) + (days < 1 ? "" : (days + (days == 1 ? " day" : " days"))) + (hours < 1 ? "" : (hours + (hours == 1 ? " hour" : " hours"))) + (minutes < 1 ? "" : (minutes + (minutes == 1 ? " minute" : " minutes"))) + (seconds < 1 ? "" : (seconds + (seconds == 1 ? " second" : " seconds")));
+    }
 }
