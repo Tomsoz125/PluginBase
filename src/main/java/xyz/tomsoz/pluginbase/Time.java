@@ -284,7 +284,7 @@ public final class Time {
         }
     }
 
-    public String formatSeconds(int secs) {
+    public static String formatSeconds(int secs) {
         int milliseconds = secs * 1000;
         int seconds = (int) (milliseconds / 1000) % 60;
         int minutes = (int) ((milliseconds / (1000 * 60)) % 60);
