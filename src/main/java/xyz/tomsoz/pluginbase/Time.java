@@ -292,6 +292,6 @@ public final class Time {
         int days = (int) ((milliseconds / (1000 * 60 * 60 * 24)) % 7);
         int weeks = (int) (milliseconds / (1000 * 60 * 60 * 24 * 7));
 
-        return (weeks < 1 ? "" : (weeks + (weeks == 1 ? " week " : " weeks "))) + (days < 1 ? "" : (days + (days == 1 ? " day " : " days "))) + (hours < 1 ? "" : (" " + hours + (hours == 1 ? " hour " : " hours "))) + (minutes < 1 ? "" : (" " + minutes + (minutes == 1 ? " minute " : " minutes "))) + (seconds < 1 ? "" : (" " + seconds + (seconds == 1 ? " second" : " seconds")));
+        return (weeks < 1 ? "" : (weeks + (weeks == 1 ? " week " : " weeks "))) + (days < 1 ? "" : (days + (days == 1 ? "day " : "days "))) + (hours < 1 ? "" : (" " + hours + (hours == 1 ? "hour " : "hours "))) + (minutes < 1 ? "" : (" " + minutes + (minutes == 1 ? "minute " : "minutes "))) + (seconds < 1 ? "" : (" " + seconds + (seconds == 1 ? "second" : "seconds")));
     }
 }
