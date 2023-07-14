@@ -38,6 +38,10 @@ public abstract class BaseCommand extends Command {
     @Getter
     protected boolean consoleOnly;
 
+    public BaseCommand() {
+        super(null, null, null, null);
+    }
+
     public BaseCommand(@NotNull String name, @NotNull String description, @NotNull Permission permission, @NotNull String[] aliases, @NotNull Arguments args, boolean playerOnly) {
         super(name, description, "", Arrays.asList(aliases));
         this.perm = permission;
@@ -146,7 +150,5 @@ public abstract class BaseCommand extends Command {
     /**
      * @return The builder for this command.
      */
-    public static CommandBuilder builder() {
-        return null;
-    }
+    public abstract CommandBuilder builder();
 }
