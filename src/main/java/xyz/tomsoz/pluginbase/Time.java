@@ -303,6 +303,6 @@ public final class Time {
         int days = (int) ((milliseconds / (1000 * 60 * 60 * 24)) % 7);
         int weeks = (int) (milliseconds / (1000 * 60 * 60 * 24 * 7));
 
-        return (weeks < 1 ? "" : (weeks + (" w") + " ")) + (days < 1 ? "" : (days + (" d") + " ")) + (hours < 1 ? "" : (hours + (" h") + " ")) + (minutes < 1 ? "" : (minutes + (" m") + " ")) + (seconds < 1 ? "" : (seconds + (" s") + " "));
+        return (weeks < 1 ? "" : (weeks + ("w") + " ")) + (days < 1 ? "" : (days + ("d") + " ")) + (hours < 1 ? "" : (hours + ("h") + " ")) + (minutes < 1 ? "" : (minutes + ("m") + " ")) + (seconds < 1 ? "" : (seconds + ("s") + " "));
     }
 }
